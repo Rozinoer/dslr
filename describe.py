@@ -1,6 +1,8 @@
+import numpy as np
 import sys
 import csv
 from math import sqrt
+import pandas as pd
 
 
 def is_digit(string):
@@ -28,8 +30,14 @@ def read_csv(filePath):
                     for item in row:
                         features[item] = []
                 else:
+                    i = 0
                     for item in row:
-                        features[titles[row.index(item)]].append(item)
+                        if not str(item):
+                            features[titles[i]].append(np.nan)
+                        else:
+                            features[titles[i]].append(item)
+                        i += 1
+                    i = 0
     except FileNotFoundError:
         return -1
     return features
@@ -40,8 +48,13 @@ def delete_non_num(features):
     correct_features = []
     for key in features:
         try:
-            float(features[key][0])
-            correct_features.append(key)
+            for i in range(len(features[key])):
+                float_val = float(features[key][i])
+                if not np.isnan(float_val):
+                    correct_features.append(key)
+                    break
+                if i == len(features[key]) - 1:
+                    features_to_delete.append(key)
         except:
             features_to_delete.append(key)
     for i in features_to_delete:
@@ -50,12 +63,10 @@ def delete_non_num(features):
 
 
 def count(list):
-    sum = 0.0
+    sum = 0
     for i in list:
-        if not str(i):
-            sum += 0
-        else:
-            sum += float(i)
+        if not np.isnan(i):
+            sum += 1
     sum = round(sum, 6)
     return sum
 
@@ -65,26 +76,19 @@ def collect_count(features):
     for key in features:
         count_list.append(count(features[key]))
     return count_list
-    # print('{:^10}'.format(""), end='')
-    # for i in features_list:
-    #     width = len(i) if len(i) > len(count_list[features_list.index(i)]) else len(count_list[features_list.index(i)])
-    #     width += 2
-    #     print(i.center(width), end='')
-    #     width_list.append(width)
-    # print()
-    # print('{:^10}'.format("Count"), end='')
-    # for i in count_list:
-    #     print(i.center(width_list[count_list.index(i)]), end='')
-    # print()
 
 
-def collect_mean(features, _count):
+def collect_mean(features):
     mean_list = []
-    m = 0
+    sum = 0
+
     for key in features:
         _len = len(features[key])
-        mean_list.append(round(_count[m] / _len, 6))
-        m += 1
+        for item in features[key]:
+            if not np.isnan(item):
+                sum += item
+        mean_list.append(round(sum / _len, 6))
+        sum = 0
     return mean_list
 
 
@@ -94,11 +98,11 @@ def collect_std(features, _mean):
     squad_sum = 0
     for key in features:
         for item in features[key]:
-            if not str(item):
-                squad_sum += (0.0 - _mean[0]) ** 2
-            else:
-                squad_sum += (float(item) - _mean[0]) ** 2
-        std_list.append(round(sqrt(squad_sum / _mean[0]), 6))
+            if not np.isnan(item):
+                squad_sum += (item - _mean[m]) ** 2
+        dispersion = squad_sum / (len(features[key]) - 1)
+        squad_sum = 0
+        std_list.append(round(sqrt(dispersion), 6))
         m += 1
     return std_list
 
@@ -106,26 +110,22 @@ def collect_std(features, _mean):
 def collect_min(features):
     min_list = []
     for key in features:
-        _min = features[key][0]
+        _min = float('inf')
         for item in features[key]:
-            _min = item if _min > item else _min
-        if not str(_min):
-            min_list.append(0.0)
-        else:
-            min_list.append(round(float(_min), 6))
+            if not np.isnan(item):
+                _min = item if _min > item  else _min
+        min_list.append(round(float(_min), 6))
     return min_list
 
 
 def collect_max(features):
     max_list = []
     for key in features:
-        _max = features[key][0]
+        _max = float('-inf')
         for item in features[key]:
-            _max = item if _max < item else _max
-        if not str(_max):
-            max_list.append(0.0)
-        else:
-            max_list.append(round(float(_max), 6))
+            if not np.isnan(item):
+                _max = item if _max < item else _max
+        max_list.append(round(float(_max), 6))
     return max_list
 
 
@@ -137,33 +137,59 @@ def collect_quartiles(features, percent):
     return quartiles_list
 
 
+def print_info(type_data, type):
+    print('%-5s' % (type), end='')
+    for item in type_data:
+        if type_data.index(item) == 0:
+            print('%24s' % item, end=' ')
+        else:
+            print('%29s' % item, end=' ')
+    print()
+
+
 def create_table(features, features_list):
     _count = collect_count(features)
-    _mean = collect_mean(features, _count)
+    _mean = collect_mean(features)
     _std = collect_std(features, _mean)
     _min = collect_min(features)
     _max = collect_max(features)
     _q25 = collect_quartiles(features, 25)
     _q50 = collect_quartiles(features, 50)
     _q75 = collect_quartiles(features, 75)
+    for item in features_list:
+        print('%29s' % item, end=' ')
+    print()
+
+    print_info(_count, 'count')
+    print_info(_mean, 'mean')
+    print_info(_std, 'std')
+    print_info(_min, 'min')
+    print_info(_q25, '25%')
+    print_info(_q50, '50%')
+    print_info(_q75, '75%')
+    print_info(_max, 'max')
 
 
-# def empty_to_zero(numerical_features):
-#     _features = []
-#     for key in numerical_features:
-#         print(numerical_features[key])
-#         for i in numerical_features[key]:
-#             if not str(i):
-#                 numerical_features[key][i] = '0'
-#                 print(numerical_features[key][i])
-#     return _features
+def to_float(features):
+    float_features = {}
+    for key in features:
+        float_features[key] = []
+        for value in features[key]:
+            try:
+                float_features[key].append(float(value))
+            except:
+                float_features[key].append(np.nan)
+    return float_features
 
 
 def main(filePath):
     features = read_csv(filePath)
     numerical_features, list_of_numerical_features = delete_non_num(features)
-    # empty_to_zero(numerical_features)
+    numerical_features = to_float(numerical_features)
     create_table(numerical_features, list_of_numerical_features)
+    df = pd.read_csv(filePath)
+
+    print(df.describe())
 
 
 if __name__ == "__main__":
@@ -171,4 +197,4 @@ if __name__ == "__main__":
     #     main(sys.argv[1])
     # else:
     #     print("Wrong number of arguments!")
-    main("./dataset_train.csv")
+    main("./test.csv")
