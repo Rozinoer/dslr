@@ -61,7 +61,6 @@ def delete_non_num(features):
         features.pop(i)
     return features, correct_features
 
-
 def count(list):
     sum = 0
     for i in list:
@@ -78,21 +77,22 @@ def collect_count(features):
     return count_list
 
 
-def collect_mean(features):
+def collect_mean(features, count):
     mean_list = []
     sum = 0
-
+    index = 0
     for key in features:
         _len = len(features[key])
         for item in features[key]:
             if not np.isnan(item):
                 sum += item
-        mean_list.append(round(sum / _len, 6))
+        mean_list.append(round(sum / count[index], 6))
+        index += 1
         sum = 0
     return mean_list
 
 
-def collect_std(features, _mean):
+def collect_std(features, _mean, _count):
     std_list = []
     m = 0
     squad_sum = 0
@@ -100,7 +100,7 @@ def collect_std(features, _mean):
         for item in features[key]:
             if not np.isnan(item):
                 squad_sum += (item - _mean[m]) ** 2
-        dispersion = squad_sum / (len(features[key]) - 1)
+        dispersion = squad_sum / (_count[m] - 1)
         squad_sum = 0
         std_list.append(round(sqrt(dispersion), 6))
         m += 1
@@ -138,26 +138,24 @@ def collect_quartiles(features, percent):
 
 
 def print_info(type_data, type):
-    print('%-5s' % (type), end='')
+    print('\033[41m%-5s\033[0m' % (type), end='')
     for item in type_data:
-        if type_data.index(item) == 0:
-            print('%24s' % item, end=' ')
-        else:
-            print('%29s' % item, end=' ')
+        print('\033[42m%29.6f\033[0m' % item, end=' ')
     print()
 
 
 def create_table(features, features_list):
     _count = collect_count(features)
-    _mean = collect_mean(features)
-    _std = collect_std(features, _mean)
+    _mean = collect_mean(features, _count)
+    _std = collect_std(features, _mean, _count)
     _min = collect_min(features)
     _max = collect_max(features)
     _q25 = collect_quartiles(features, 25)
     _q50 = collect_quartiles(features, 50)
     _q75 = collect_quartiles(features, 75)
+    print('\033[41m%-5s\033[0m' % "", end='')
     for item in features_list:
-        print('%29s' % item, end=' ')
+        print('\033[42m%29s\033[0m' % item, end=' ')
     print()
 
     print_info(_count, 'count')
@@ -188,7 +186,6 @@ def main(filePath):
     numerical_features = to_float(numerical_features)
     create_table(numerical_features, list_of_numerical_features)
     df = pd.read_csv(filePath)
-
     print(df.describe())
 
 
@@ -197,4 +194,4 @@ if __name__ == "__main__":
     #     main(sys.argv[1])
     # else:
     #     print("Wrong number of arguments!")
-    main("./test.csv")
+    main("./dataset_train.csv")
