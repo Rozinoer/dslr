@@ -140,7 +140,7 @@ def collect_quartiles(features, percent):
 def print_info(type_data, type):
     print('\033[41m%-5s\033[0m' % (type), end='')
     for item in type_data:
-        print('\033[42m%29.6f\033[0m' % item, end=' ')
+        print('\033[42m%15.6f\033[0m' % item, end=' ')
     print()
 
 
@@ -155,7 +155,7 @@ def create_table(features, features_list):
     _q75 = collect_quartiles(features, 75)
     print('\033[41m%-5s\033[0m' % "", end='')
     for item in features_list:
-        print('\033[42m%29s\033[0m' % item, end=' ')
+        print('\033[42m%15.10s\033[0m' % item, end=' ')
     print()
 
     print_info(_count, 'count')
