@@ -1,7 +1,7 @@
 import numpy as np
 import sys
 import csv
-from math import sqrt
+from math import sqrt, trunc
 import pandas as pd
 
 
@@ -61,6 +61,7 @@ def delete_non_num(features):
         features.pop(i)
     return features, correct_features
 
+
 def count(list):
     sum = 0
     for i in list:
@@ -113,7 +114,7 @@ def collect_min(features):
         _min = float('inf')
         for item in features[key]:
             if not np.isnan(item):
-                _min = item if _min > item  else _min
+                _min = item if _min > item else _min
         min_list.append(round(float(_min), 6))
     return min_list
 
@@ -137,10 +138,17 @@ def collect_quartiles(features, percent):
     return quartiles_list
 
 
-def print_info(type_data, type):
+def create_template(_list, _title):
+    template = '{0:' + '' + ".6f"
+    return template
+
+
+def print_info(type_data, type, templates):
     print('\033[41m%-5s\033[0m' % (type), end='')
+    m = 0
     for item in type_data:
-        print('\033[42m%15.6f\033[0m' % item, end=' ')
+        print(templates[m].format(item), end='')
+        m += 1
     print()
 
 
@@ -154,18 +162,34 @@ def create_table(features, features_list):
     _q50 = collect_quartiles(features, 50)
     _q75 = collect_quartiles(features, 75)
     print('\033[41m%-5s\033[0m' % "", end='')
-    for item in features_list:
-        print('\033[42m%15.10s\033[0m' % item, end=' ')
-    print()
 
-    print_info(_count, 'count')
-    print_info(_mean, 'mean')
-    print_info(_std, 'std')
-    print_info(_min, 'min')
-    print_info(_q25, '25%')
-    print_info(_q50, '50%')
-    print_info(_q75, '75%')
-    print_info(_max, 'max')
+    max_len = 0
+    templates = []
+    for count, mean, std, min, q25, q50, q75, max, feature \
+        in zip(_count,_mean,_std,_min,_q25,_q50,_q75,_max, features_list):
+        max_len = len(str(trunc(count))) + 7 if len(str(trunc(count))) + 7 > max_len else max_len
+        max_len = len(str(trunc(mean))) + 7 if len(str(trunc(mean))) + 7 > max_len else max_len
+        max_len = len(str(trunc(std))) + 7 if len(str(trunc(std))) + 7 > max_len else max_len
+        max_len = len(str(trunc(min))) + 7 if len(str(trunc(min))) + 7 > max_len else max_len
+        max_len = len(str(trunc(q25))) + 7 if len(str(trunc(q25))) + 7 > max_len else max_len
+        max_len = len(str(trunc(q50))) + 7 if len(str(trunc(q50))) + 7 > max_len else max_len
+        max_len = len(str(trunc(q75))) + 7 if len(str(trunc(q75))) + 7 > max_len else max_len
+        max_len = len(str(trunc(max))) + 7 if len(str(trunc(max))) + 7 > max_len else max_len
+        max_len = len(feature) if len(feature) > max_len else max_len
+        max_len += 2
+        t = '{0:>' + str(max_len) + "s}"
+        print(t.format(feature), end='')
+        templates.append('{0:' + str(max_len) + ".6f}")
+        max_len = 0
+    print()
+    print_info(_count, 'count',templates)
+    print_info(_mean, 'mean',templates)
+    print_info(_std, 'std',templates)
+    print_info(_min, 'min',templates)
+    print_info(_q25, '25%',templates)
+    print_info(_q50, '50%',templates)
+    print_info(_q75, '75%',templates)
+    print_info(_max, 'max',templates)
 
 
 def to_float(features):
