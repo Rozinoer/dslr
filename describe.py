@@ -1,8 +1,6 @@
 import numpy as np
-import sys
 import csv
-from math import sqrt, trunc
-import pandas as pd
+from math import sqrt, trunc, floor
 
 
 def is_digit(string):
@@ -37,7 +35,6 @@ def read_csv(filePath):
                         else:
                             features[titles[i]].append(item)
                         i += 1
-                    i = 0
     except FileNotFoundError:
         return -1
     return features
@@ -78,7 +75,9 @@ def collect_count(features):
     return count_list
 
 
-def collect_mean(features, count):
+def collect_mean(features, counting_features=None):
+    if counting_features is None:
+        counting_features = collect_count(features)
     mean_list = []
     sum = 0
     index = 0
@@ -87,7 +86,7 @@ def collect_mean(features, count):
         for item in features[key]:
             if not np.isnan(item):
                 sum += item
-        mean_list.append(round(sum / count[index], 6))
+        mean_list.append(round(sum / counting_features[index], 6))
         index += 1
         sum = 0
     return mean_list
@@ -132,9 +131,20 @@ def collect_max(features):
 
 def collect_quartiles(features, percent):
     quartiles_list = []
+    new_list = []
     for key in features:
-        _len = len(features[key])
-        quartiles_list.append(round(percent / 100 * (_len + 1), 6))
+        _len = count(features[key])
+        for i in features[key]:
+            if not np.isnan(i):
+                new_list.append(i)
+        new_list.sort()  # fix
+        index = floor(percent / 100 * (_len + 1)) - 1
+        if (percent / 100 * (_len + 1)) - 1 == index:
+            percentile = new_list[index]
+        else:
+            percentile = new_list[index] + new_list[index + 1]
+        quartiles_list.append(round(percentile / 2, 6))
+        new_list = []
     return quartiles_list
 
 
@@ -166,7 +176,7 @@ def create_table(features, features_list):
     max_len = 0
     templates = []
     for count, mean, std, min, q25, q50, q75, max, feature \
-        in zip(_count,_mean,_std,_min,_q25,_q50,_q75,_max, features_list):
+            in zip(_count, _mean, _std, _min, _q25, _q50, _q75, _max, features_list):
         max_len = len(str(trunc(count))) + 7 if len(str(trunc(count))) + 7 > max_len else max_len
         max_len = len(str(trunc(mean))) + 7 if len(str(trunc(mean))) + 7 > max_len else max_len
         max_len = len(str(trunc(std))) + 7 if len(str(trunc(std))) + 7 > max_len else max_len
@@ -182,14 +192,14 @@ def create_table(features, features_list):
         templates.append('{0:' + str(max_len) + ".6f}")
         max_len = 0
     print()
-    print_info(_count, 'count',templates)
-    print_info(_mean, 'mean',templates)
-    print_info(_std, 'std',templates)
-    print_info(_min, 'min',templates)
-    print_info(_q25, '25%',templates)
-    print_info(_q50, '50%',templates)
-    print_info(_q75, '75%',templates)
-    print_info(_max, 'max',templates)
+    print_info(_count, 'count', templates)
+    print_info(_mean, 'mean', templates)
+    print_info(_std, 'std', templates)
+    print_info(_min, 'min', templates)
+    print_info(_q25, '25%', templates)
+    print_info(_q50, '50%', templates)
+    print_info(_q75, '75%', templates)
+    print_info(_max, 'max', templates)
 
 
 def to_float(features):
@@ -206,11 +216,10 @@ def to_float(features):
 
 def main(filePath):
     features = read_csv(filePath)
+    print(features['Index'])
     numerical_features, list_of_numerical_features = delete_non_num(features)
     numerical_features = to_float(numerical_features)
     create_table(numerical_features, list_of_numerical_features)
-    df = pd.read_csv(filePath)
-    print(df.describe())
 
 
 if __name__ == "__main__":
