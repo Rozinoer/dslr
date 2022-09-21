@@ -1,105 +1,94 @@
 import matplotlib.pyplot as plt
-import numpy as np
-import csv
-from datetime import datetime
+from numpy import isnan
+import pandas as pd
+from os.path import isfile
 
 
-def read_csv(filePath):
-    features = {}
-    flag = 1
-    titles = []
-    try:
-        with open(filePath, 'r', newline='') as csvfile:
-            data = csv.reader(csvfile, delimiter=',', quotechar='|')
-            for row in data:
-                if flag:
-                    flag = 0
-                    titles = row
-                    for item in row:
-                        features[item] = []
-                else:
-                    i = 0
-                    for item in row:
-                        if not str(item):
-                            features[titles[i]].append(np.nan)
-                        else:
-                            features[titles[i]].append(item)
-                        i += 1
-    except FileNotFoundError:
-        return -1
-    return features
+def read_csv(csvFile):
+    df = pd.read_csv(
+            csvFile,
+            usecols=[1, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+        )
+    return df
 
 
-def get_datarow_by_index(data, index, titles):
-    row = {}
-    for i in titles:
-        row[i] = data[i][index]
-    return row
+def     get_df_houses(filename):
+    if not isfile(filename):
+        print('ERROR: File not Found!')
+        exit(1)
+    df = read_csv(filename)
+    df_houses = {}
+    df_houses['G'] = df[df['Hogwarts House'] == 'Gryffindor']
+    df_houses['H'] = df[df['Hogwarts House'] == 'Hufflepuff']
+    df_houses['S'] = df[df['Hogwarts House'] == 'Slytherin']
+    df_houses['R'] = df[df['Hogwarts House'] == 'Ravenclaw']
+    return df_houses
 
 
-def data_by_house(course_data):
-    houses = {
-        "Ravenclaw": 0,
-        "Slytherin": 0,
-        "Gryffindor": 0,
-        "Hufflepuff": 0
-    }
-    for item in course_data:
-        score = 0
-        for key in item:
-            if key != "Hogwarts House" and key != "Birthday":
-                if not np.isnan(float(item[key])):
-                    value = float(item[key])
-                    score += value
-        houses[item["Hogwarts House"]] += score
-    for key in houses:
-        houses[key] = round(houses[key], 2)
-    return houses
+def display(data):
+    figure = plt.figure(figsize=(13,9))
+    figure.subplots_adjust(hspace=.5)
+    figure.canvas.set_window_title('Histogram of each course')
+    ax = []
+    i = 0
+    for col in list(data['G'].columns)[1:]:
+        ax.append(figure.add_subplot(4,4,i + 1))
 
+        myarray = data['R'].loc[:, col]
+        myarray = myarray[~isnan(myarray)]
+        ax[i].hist(
+            myarray,
+            alpha=0.4,
+            bins='auto',
+            color='#0000FF',
+            label='Ravenclaw',
+        )
 
-def data_by_course(data):
-    titles = []
-    courses = {
-        1: [],
-        2: [],
-        3: [],
-        4: [],
-        5: [],
-        6: [],
-    }
-    for key in data:
-        titles.append(key)
-    titles.remove("Index")
-    titles.remove("First Name")
-    titles.remove("Last Name")
-    titles.remove("Best Hand")
-    for i in range(0, 1600):
-        row = get_datarow_by_index(data, i, titles)
-        birthday_year = datetime.strptime(row['Birthday'], "%Y-%m-%d").year
-        courses[2001 - birthday_year + 1].append(row)
-    houses_score = []
-    houses_score.append(data_by_house(courses[1]))
-    houses_score.append(data_by_house(courses[2]))
-    houses_score.append(data_by_house(courses[3]))
-    houses_score.append(data_by_house(courses[4]))
-    houses_score.append(data_by_house(courses[5]))
-    houses_score.append(data_by_house(courses[6]))
-    for i in houses_score:
-        print(i)
-    # n, bins, patches = plt.hist(data)
-    #
-    # plt.xlabel('Smarts')
-    # plt.ylabel('Probability')
-    # plt.title('Histogram of IQ')
-    # plt.xlim(0, 10)
-    # plt.ylim(0, 10)
-    # plt.grid(True)
+        myarray = data['H'].loc[:, col]
+        myarray = myarray[~isnan(myarray)]
+        ax[i].hist(
+            myarray,
+            alpha=0.5,
+            bins='auto',
+            color='#CCCC00',
+            label='Hufflepuff',
+        )
+
+        myarray = data['G'].loc[:, col]
+        myarray = myarray[~isnan(myarray)]
+        ax[i].hist(
+            myarray,
+            alpha=0.4,
+            bins='auto',
+            color='#FF0000',
+            label='Gryffindor',
+        )
+
+        myarray = data['S'].loc[:, col]
+        myarray = myarray[~isnan(myarray)]
+        ax[i].hist(
+            myarray,
+            alpha=0.4,
+            bins='auto',
+            color='#00FF00',
+            label='Slytherin',
+        )
+
+        ax[i].set_title(col)
+        i+=1
+    plt.legend(
+        bbox_to_anchor=(1.5,1),
+        loc='upper left',
+        borderaxespad=0
+    )
+
     # plt.show()
 
 
+
 def histogram():
-    data = read_csv('./dataset_train.csv')
-    data_by_course(data)
+    data = get_df_houses('./dataset_train.csv')
+    display(data)
 
 
 if __name__ == '__main__':

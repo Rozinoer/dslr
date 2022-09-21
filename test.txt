@@ -1,9 +1,312 @@
-                            a                             b                             d 
-count                       4                        4                        4 
-mean                      2.5                          4.25                           4.5 
-std                  1.290994                      2.061553                      2.886751 
-min                       1.0                           2.0                      1.0 
-25%                      1.25                     1.25                     1.25 
-50%                       2.5                      2.5                      2.5 
-75%                      3.75                     3.75                     3.75 
-max                       4.0                           6.0                           8.0 
+first <class 'pandas.core.series.Series'> | 0       True
+2       True
+14      True
+15      True
+18      True
+        ... 
+1576    True
+1577    True
+1582    True
+1590    True
+1593    True
+Name: Arithmancy, Length: 443, dtype: bool
+second <class 'pandas.core.series.Series'> | 0       False
+2       False
+14      False
+15      False
+18      False
+        ...  
+1576    False
+1577    False
+1582    False
+1590    False
+1593    False
+Name: Arithmancy, Length: 443, dtype: bool
+first <class 'pandas.core.series.Series'> | 0       True
+2       True
+14      True
+15      True
+18      True
+        ... 
+1576    True
+1577    True
+1582    True
+1590    True
+1593    True
+Name: Astronomy, Length: 443, dtype: bool
+second <class 'pandas.core.series.Series'> | 0       False
+2       False
+14      False
+15      False
+18      False
+        ...  
+1576    False
+1577    False
+1582    False
+1590    False
+1593    False
+Name: Astronomy, Length: 443, dtype: bool
+first <class 'pandas.core.series.Series'> | 0       True
+2       True
+14      True
+15      True
+18      True
+        ... 
+1576    True
+1577    True
+1582    True
+1590    True
+1593    True
+Name: Herbology, Length: 443, dtype: bool
+second <class 'pandas.core.series.Series'> | 0       False
+2       False
+14      False
+15      False
+18      False
+        ...  
+1576    False
+1577    False
+1582    False
+1590    False
+1593    False
+Name: Herbology, Length: 443, dtype: bool
+first <class 'pandas.core.series.Series'> | 0       True
+2       True
+14      True
+15      True
+18      True
+        ... 
+1576    True
+1577    True
+1582    True
+1590    True
+1593    True
+Name: Defense Against the Dark Arts, Length: 443, dtype: bool
+second <class 'pandas.core.series.Series'> | 0       False
+2       False
+14      False
+15      False
+18      False
+        ...  
+1576    False
+1577    False
+1582    False
+1590    False
+1593    False
+Name: Defense Against the Dark Arts, Length: 443, dtype: bool
+first <class 'pandas.core.series.Series'> | 0       True
+2       True
+14      True
+15      True
+18      True
+        ... 
+1576    True
+1577    True
+1582    True
+1590    True
+1593    True
+Name: Divination, Length: 443, dtype: bool
+second <class 'pandas.core.series.Series'> | 0       False
+2       False
+14      False
+15      False
+18      False
+        ...  
+1576    False
+1577    False
+1582    False
+1590    False
+1593    False
+Name: Divination, Length: 443, dtype: bool
+first <class 'pandas.core.series.Series'> | 0       True
+2       True
+14      True
+15      True
+18      True
+        ... 
+1576    True
+1577    True
+1582    True
+1590    True
+1593    True
+Name: Muggle Studies, Length: 443, dtype: bool
+second <class 'pandas.core.series.Series'> | 0       False
+2       False
+14      False
+15      False
+18      False
+        ...  
+1576    False
+1577    False
+1582    False
+1590    False
+1593    False
+Name: Muggle Studies, Length: 443, dtype: bool
+first <class 'pandas.core.series.Series'> | 0       True
+2       True
+14      True
+15      True
+18      True
+        ... 
+1576    True
+1577    True
+1582    True
+1590    True
+1593    True
+Name: Ancient Runes, Length: 443, dtype: bool
+second <class 'pandas.core.series.Series'> | 0       False
+2       False
+14      False
+15      False
+18      False
+        ...  
+1576    False
+1577    False
+1582    False
+1590    False
+1593    False
+Name: Ancient Runes, Length: 443, dtype: bool
+first <class 'pandas.core.series.Series'> | 0       True
+2       True
+14      True
+15      True
+18      True
+        ... 
+1576    True
+1577    True
+1582    True
+1590    True
+1593    True
+Name: History of Magic, Length: 443, dtype: bool
+second <class 'pandas.core.series.Series'> | 0       False
+2       False
+14      False
+15      False
+18      False
+        ...  
+1576    False
+1577    False
+1582    False
+1590    False
+1593    False
+Name: History of Magic, Length: 443, dtype: bool
+first <class 'pandas.core.series.Series'> | 0       True
+2       True
+14      True
+15      True
+18      True
+        ... 
+1576    True
+1577    True
+1582    True
+1590    True
+1593    True
+Name: Transfiguration, Length: 443, dtype: bool
+second <class 'pandas.core.series.Series'> | 0       False
+2       False
+14      False
+15      False
+18      False
+        ...  
+1576    False
+1577    False
+1582    False
+1590    False
+1593    False
+Name: Transfiguration, Length: 443, dtype: bool
+first <class 'pandas.core.series.Series'> | 0       True
+2       True
+14      True
+15      True
+18      True
+        ... 
+1576    True
+1577    True
+1582    True
+1590    True
+1593    True
+Name: Potions, Length: 443, dtype: bool
+second <class 'pandas.core.series.Series'> | 0       False
+2       False
+14      False
+15      False
+18      False
+        ...  
+1576    False
+1577    False
+1582    False
+1590    False
+1593    False
+Name: Potions, Length: 443, dtype: bool
+first <class 'pandas.core.series.Series'> | 0       True
+2       True
+14      True
+15      True
+18      True
+        ... 
+1576    True
+1577    True
+1582    True
+1590    True
+1593    True
+Name: Care of Magical Creatures, Length: 443, dtype: bool
+second <class 'pandas.core.series.Series'> | 0       False
+2       False
+14      False
+15      False
+18      False
+        ...  
+1576    False
+1577    False
+1582    False
+1590    False
+1593    False
+Name: Care of Magical Creatures, Length: 443, dtype: bool
+first <class 'pandas.core.series.Series'> | 0       True
+2       True
+14      True
+15      True
+18      True
+        ... 
+1576    True
+1577    True
+1582    True
+1590    True
+1593    True
+Name: Charms, Length: 443, dtype: bool
+second <class 'pandas.core.series.Series'> | 0       False
+2       False
+14      False
+15      False
+18      False
+        ...  
+1576    False
+1577    False
+1582    False
+1590    False
+1593    False
+Name: Charms, Length: 443, dtype: bool
+first <class 'pandas.core.series.Series'> | 0       True
+2       True
+14      True
+15      True
+18      True
+        ... 
+1576    True
+1577    True
+1582    True
+1590    True
+1593    True
+Name: Flying, Length: 443, dtype: bool
+second <class 'pandas.core.series.Series'> | 0       False
+2       False
+14      False
+15      False
+18      False
+        ...  
+1576    False
+1577    False
+1582    False
+1590    False
+1593    False
+Name: Flying, Length: 443, dtype: bool
