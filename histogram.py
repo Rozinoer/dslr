@@ -1,3 +1,4 @@
+from cProfile import label
 import matplotlib.pyplot as plt
 from numpy import isnan
 import pandas as pd
@@ -26,7 +27,7 @@ def     get_df_houses(filename):
 
 
 def display(data):
-    figure = plt.figure(figsize=(13,9))
+    figure = plt.figure(figsize=(20,7))
     figure.subplots_adjust(hspace=.5)
     figure.canvas.set_window_title('Histogram of each course')
     ax = []
@@ -82,7 +83,7 @@ def display(data):
         borderaxespad=0
     )
 
-    # plt.show()
+    plt.show()
 
 
 
