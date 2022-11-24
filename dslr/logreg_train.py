@@ -10,6 +10,7 @@ def adaptDataForTrain(df):
 	X = df.loc[:, 'Arithmancy':].replace(np.nan, 0)
 	X = (X - X.mean()) / X.std()
 	Y = df['Hogwarts House']
+	print(X, '\n', Y, '\n', houses)
 	return X, Y, houses
 
 def adaptDataForHouse(df, house):
