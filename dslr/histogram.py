@@ -29,7 +29,7 @@ def     get_df_houses(filename):
 def display(data):
     figure = plt.figure(figsize=(20,7))
     figure.subplots_adjust(hspace=.5)
-    figure.canvas.set_window_title('Histogram of each course')
+    # figure.canvas.set_window_title('Histogram of each course')
     ax = []
     i = 0
     for col in list(data['G'].columns)[1:]:
@@ -87,10 +87,11 @@ def display(data):
 
 
 
-def histogram():
-    data = get_df_houses('./dataset_train.csv')
+def histogram(filename):
+    data = get_df_houses(filename)
     display(data)
 
 
 if __name__ == '__main__':
-    histogram()
+    filename = 'dslr/dataset_train.csv'
+    histogram(filename)

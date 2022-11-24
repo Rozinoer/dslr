@@ -216,7 +216,7 @@ def to_float(features):
 
 def main(filePath):
     features = read_csv(filePath)
-    print(features['Index'])
+    # print(features['Index'])
     numerical_features, list_of_numerical_features = delete_non_num(features)
     numerical_features = to_float(numerical_features)
     create_table(numerical_features, list_of_numerical_features)
